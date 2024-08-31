@@ -1,7 +1,5 @@
 <div align="center">
-<h1>Cloud Dns Exporter</h1>
-
-<p> 🧰 自动获取各dns提供商的域名及解析列表，同时自动获取每个域名解析的证书信息。</p>
+<h1>Cloud DNS Exporter</h1>
 
 [![Auth](https://img.shields.io/badge/Auth-eryajf-ff69b4)](https://github.com/eryajf)
 [![GitHub contributors](https://img.shields.io/github/contributors/eryajf/cloud_dns_exporter)](https://github.com/eryajf/cloud_dns_exporter/graphs/contributors)
@@ -10,6 +8,13 @@
 [![HitCount](https://views.whatilearened.today/views/github/eryajf/cloud_dns_exporter.svg)](https://github.com/eryajf/cloud_dns_exporter)
 [![GitHub license](https://img.shields.io/github/license/eryajf/cloud_dns_exporter)](https://github.com/eryajf/cloud_dns_exporter/blob/main/LICENSE)
 [![](https://img.shields.io/badge/Awesome-MyStarList-c780fa?logo=Awesome-Lists)](https://github.com/eryajf/awesome-stars-eryajf#readme)
+
+<p> 🧰 自动获取DNS提供商的域名及解析列表，同时自动获取每个域名解析的证书信息。🧰 </p>
+
+<img src="https://cdn.jsdelivr.net/gh/eryajf/tu@main/img/image_20240420_214408.gif" width="800"  height="3">
+</div><br>
+
+![cloud_dns_exporter](https://socialify.git.ci/eryajf/cloud_dns_exporter/image?description=1&descriptionEditable=%E9%80%90%E6%AD%A5%E8%BF%88%E5%90%91%E8%BF%90%E7%BB%B4%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%8E%B0%E4%BB%A3%E5%8C%96%EF%BC%9A%E8%A7%84%E8%8C%83%E5%8C%96%EF%BC%8C%E6%A0%87%E5%87%86%E5%8C%96%EF%BC%8C%E9%AB%98%E6%95%88%E5%8C%96%EF%BC%8C%E4%BC%98%E9%9B%85%E5%8C%96&font=Bitter&forks=1&issues=1&language=1&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
 
 </div>
 
@@ -25,9 +30,13 @@
 
 可以直接下载二进制，然后更改配置文件，直接运行即可。
 
-默认端口监听在21798，为什么选择这个端口，因为项目对应在grafana中的仪表板ID就是[21798](https://grafana.com/grafana/dashboards/21798-cloud-dns-record-info/)。
+默认端口监听在`21798`，为什么选择这个端口，因为项目对应在grafana中的仪表板ID就是[21798](https://grafana.com/grafana/dashboards/21798-cloud-dns-record-info/)。
 
 你也可以选择使用docker部署，部署时把config.yaml在本地配置好，然后运行时，通过挂载(`-v ./config.yaml:/app/config.yaml`)覆盖容器内默认配置即可。
+
+镜像地址：
+- 国外: `eryajf/cloud_dns_exporter`
+- 国内: `registry.cn-hangzhou.aliyuncs.com/eryajf/cloud_dns_exporter`
 
 目前应用还提供了`-v`参数，用于打印当前所使用的版本信息。
 
