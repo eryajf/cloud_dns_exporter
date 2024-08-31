@@ -1,0 +1,14 @@
+cloud_providers:
+  tencent:
+    accounts:
+      - name: t1
+        secretId: "xxxxx"
+        secretKey: "xxxxx"
+      - name: t2
+        secretId: "xxxxx"
+        secretKey: "xxxxx"
+  aliyun:
+    accounts:
+      - name: a1
+        secretId: "xxxxx"
+        secretKey: "xxxxx"
