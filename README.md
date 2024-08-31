@@ -28,7 +28,7 @@
 
 ## 如何使用
 
-可以直接下载二进制，然后更改配置文件，直接运行即可。
+可以直接在 [Release](https://github.com/eryajf/cloud_dns_exporter/releases) 发布页面下载二进制，然后更改配置文件，直接运行即可。
 
 默认端口监听在`21798`，为什么选择这个端口，因为项目对应在grafana中的仪表板ID就是[21798](https://grafana.com/grafana/dashboards/21798-cloud-dns-record-info/)。
 
