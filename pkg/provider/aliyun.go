@@ -10,8 +10,9 @@ import (
 	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
 	"github.com/alibabacloud-go/tea/tea"
 
-	"github.com/eryajf/cloud_dns_exporter/pkg/logger"
-	"github.com/eryajf/cloud_dns_exporter/pkg/tools"
+	"github.com/eryajf/cloud_dns_exporter/public/logger"
+	"github.com/eryajf/cloud_dns_exporter/public/tools"
+
 	"github.com/eryajf/cloud_dns_exporter/public"
 )
 

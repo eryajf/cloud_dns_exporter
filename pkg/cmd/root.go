@@ -8,7 +8,8 @@ import (
 	"runtime"
 
 	"github.com/eryajf/cloud_dns_exporter/pkg/export"
-	"github.com/eryajf/cloud_dns_exporter/pkg/logger"
+	"github.com/eryajf/cloud_dns_exporter/public/logger"
+
 	"github.com/eryajf/cloud_dns_exporter/public"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"

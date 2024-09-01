@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/eryajf/cloud_dns_exporter/pkg/logger"
+	"github.com/eryajf/cloud_dns_exporter/public/logger"
+
 	"github.com/eryajf/cloud_dns_exporter/pkg/provider"
 	"github.com/eryajf/cloud_dns_exporter/public"
 	"github.com/robfig/cron/v3"
