@@ -64,7 +64,8 @@ func RunServer() {
 			<body>
 			<h1>Cloud DNS Exporter</h1>
 			<p><a href='/metrics'>Metrics</a></p>
-			<p><a href='https://github.com/eryajf'>By Eryajf</a></p>
+			<p><a href='https://github.com/eryajf/cloud_dns_exporter'>Source Repo</a></p>
+			<p><a href='https://github.com/eryajf'>Create By Eryajf</a></p>
 			</body>
 			</html>`))
 		if err != nil {

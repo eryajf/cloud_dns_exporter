@@ -7,14 +7,17 @@ toolchain go1.22.4
 require (
 	github.com/alibabacloud-go/alidns-20150109/v4 v4.5.5
 	github.com/alibabacloud-go/darabonba-openapi/v2 v2.0.9
+	github.com/alibabacloud-go/domain-20180129/v4 v4.2.0
 	github.com/alibabacloud-go/tea v1.2.2
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/charmbracelet/log v0.2.2
+	github.com/golang-module/carbon/v2 v2.3.12
 	github.com/prometheus/client_golang v1.16.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/spf13/cobra v1.8.1
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.989
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.993
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.989
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.993
 )
 
 require (
