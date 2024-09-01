@@ -69,7 +69,8 @@ domain_list{
     domain_name="域名",
     domain_remark="域名备注",
     domain_status="域名状态",
-    create_time="域名创建时间"} 0
+    create_data="域名创建日期",
+    create_data="域名到期日期"} 99 (此value为域名距离到期的天数)
 
 <!-- 域名记录列表 -->
 record_list{

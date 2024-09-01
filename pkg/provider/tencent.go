@@ -7,12 +7,15 @@ import (
 	"time"
 
 	"github.com/alibabacloud-go/tea/tea"
-	"github.com/eryajf/cloud_dns_exporter/pkg/logger"
+	"github.com/eryajf/cloud_dns_exporter/public/logger"
+	"github.com/golang-module/carbon/v2"
+
 	"github.com/eryajf/cloud_dns_exporter/public"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
+	domain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain/v20180808"
 )
 
 type TencentCloudDNS struct {
@@ -62,15 +65,22 @@ func (t *TencentCloudDNS) ListDomains() ([]Domain, error) {
 	if err != nil {
 		return nil, err
 	}
+	domainNames, err := t.getDomainNameList()
+	if err != nil {
+		return nil, err
+	}
 	for _, v := range domains {
+		domainCreateAndExpiryDate := t.getDomainCreateAndExpiryDate(domainNames, v)
 		dataObj = append(dataObj, Domain{
-			CloudProvider: t.account.CloudProvider,
-			CloudName:     t.account.CloudName,
-			DomainID:      fmt.Sprintf("%d", tea.Uint64Value(v.DomainId)),
-			DomainName:    tea.StringValue(v.Name),
-			DomainRemark:  tea.StringValue(v.Remark),
-			DomainStatus:  oneStatus(tea.StringValue(v.Status)),
-			CreateTime:    tea.StringValue(v.CreatedOn),
+			CloudProvider:   t.account.CloudProvider,
+			CloudName:       t.account.CloudName,
+			DomainID:        fmt.Sprintf("%d", tea.Uint64Value(v.DomainId)),
+			DomainName:      tea.StringValue(v.Name),
+			DomainRemark:    tea.StringValue(v.Remark),
+			DomainStatus:    oneStatus(tea.StringValue(v.Status)),
+			CreatedDate:     domainCreateAndExpiryDate.CreatedDate,
+			ExpiryDate:      domainCreateAndExpiryDate.ExpiryDate,
+			DaysUntilExpiry: domainCreateAndExpiryDate.DaysUntilExpiry,
 		})
 	}
 	return dataObj, nil
@@ -142,7 +152,7 @@ func (t *TencentCloudDNS) ListRecords() ([]Record, error) {
 }
 
 // https://cloud.tencent.com/document/api/1427/56172
-// GetDomainList 获取云账号下域名列表
+// GetDomainList 获取云解析中域名列表
 func (t *TencentCloudDNS) getDomainList() ([]*dnspod.DomainListItem, error) {
 	request := dnspod.NewDescribeDomainListRequest()
 	response, err := t.client.DescribeDomainList(request)
@@ -184,4 +194,53 @@ func (t *TencentCloudDNS) getRecordList(domain string) ([]*dnspod.RecordListItem
 		offset += limit
 	}
 	return temp, nil
+}
+
+// https://cloud.tencent.com/document/api/242/48941
+// getDomainNameList 获取域名列表(与云解析的域名列表注意区分)
+func (t *TencentCloudDNS) getDomainNameList() ([]*domain.DomainList, error) {
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+		temp   []*domain.DomainList
+	)
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.Endpoint = "domain.tencentcloudapi.com"
+	client, _ := domain.NewClient(common.NewCredential(
+		t.account.SecretID,
+		t.account.SecretKey,
+	), "", cpf)
+
+	request := domain.NewDescribeDomainNameListRequest()
+	for {
+		request.Offset = common.Uint64Ptr(offset)
+		request.Limit = common.Uint64Ptr(limit)
+		response, err := client.DescribeDomainNameList(request)
+		if _, ok := err.(*errors.TencentCloudSDKError); ok {
+			return nil, err
+		}
+		if err != nil {
+			return nil, err
+		}
+		temp = append(temp, response.Response.DomainSet...)
+		if len(response.Response.DomainSet) == 0 {
+			break
+		}
+		offset += limit
+	}
+	return temp, nil
+}
+
+// getDomainCreateAndExpiryDate 获取域名的创建时间与到期时间
+func (t *TencentCloudDNS) getDomainCreateAndExpiryDate(domainList []*domain.DomainList, domain *dnspod.DomainListItem) (d Domain) {
+	for _, v := range domainList {
+		if tea.StringValue(v.DomainName) == tea.StringValue(domain.Name) {
+			d.CreatedDate = tea.StringValue(v.CreationDate)
+			d.ExpiryDate = tea.StringValue(v.ExpirationDate)
+			if d.ExpiryDate != "" {
+				d.DaysUntilExpiry = carbon.Now().DiffInDays(carbon.Parse(d.ExpiryDate))
+			}
+		}
+	}
+	return
 }

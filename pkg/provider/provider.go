@@ -36,13 +36,15 @@ func init() {
 
 // Doamin 域名信息
 type Domain struct {
-	CloudProvider string `json:"cloud_provider"`
-	CloudName     string `json:"cloud_name"`
-	DomainID      string `json:"domain_id"`
-	DomainName    string `json:"domain_name"`
-	DomainRemark  string `json:"domain_remark"`
-	DomainStatus  string `json:"domain_status"`
-	CreateTime    string `json:"create_time"`
+	CloudProvider   string `json:"cloud_provider"`
+	CloudName       string `json:"cloud_name"`
+	DomainID        string `json:"domain_id"`
+	DomainName      string `json:"domain_name"`
+	DomainRemark    string `json:"domain_remark"`
+	DomainStatus    string `json:"domain_status"`
+	CreatedDate     string `json:"created_date"`
+	ExpiryDate      string `json:"expiry_date"`
+	DaysUntilExpiry int64  `json:"days_until_expiry"`
 }
 
 // Record 域名记录信息

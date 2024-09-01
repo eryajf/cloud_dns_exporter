@@ -7,7 +7,8 @@ import (
 	"time"
 
 	"github.com/allegro/bigcache/v3"
-	"github.com/eryajf/cloud_dns_exporter/pkg/logger"
+	"github.com/eryajf/cloud_dns_exporter/public/logger"
+
 	"gopkg.in/yaml.v2"
 )
 

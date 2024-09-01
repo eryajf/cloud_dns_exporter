@@ -8,10 +8,12 @@ import (
 
 	alidns "github.com/alibabacloud-go/alidns-20150109/v4/client"
 	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
+	domain "github.com/alibabacloud-go/domain-20180129/v4/client"
 	"github.com/alibabacloud-go/tea/tea"
+	"github.com/golang-module/carbon/v2"
 
-	"github.com/eryajf/cloud_dns_exporter/pkg/logger"
-	"github.com/eryajf/cloud_dns_exporter/pkg/tools"
+	"github.com/eryajf/cloud_dns_exporter/public/logger"
+
 	"github.com/eryajf/cloud_dns_exporter/public"
 )
 
@@ -64,15 +66,22 @@ func (a *AliyunDNS) ListDomains() ([]Domain, error) {
 	if err != nil {
 		return nil, err
 	}
+	domainNames, err := a.getDomainNameList()
+	if err != nil {
+		return nil, err
+	}
 	for _, v := range domains {
+		domainCreateAndExpiryDate := a.getDomainCreateAndExpiryDate(domainNames, v)
 		dataObj = append(dataObj, Domain{
-			CloudProvider: a.account.CloudProvider,
-			CloudName:     a.account.CloudName,
-			DomainID:      tea.StringValue(v.DomainId),
-			DomainName:    tea.StringValue(v.DomainName),
-			DomainRemark:  tea.StringValue(v.Remark),
-			DomainStatus:  "enable",
-			CreateTime:    tea.StringValue(v.CreateTime),
+			CloudProvider:   a.account.CloudProvider,
+			CloudName:       a.account.CloudName,
+			DomainID:        tea.StringValue(v.DomainId),
+			DomainName:      tea.StringValue(v.DomainName),
+			DomainRemark:    tea.StringValue(v.Remark),
+			DomainStatus:    "enable",
+			CreatedDate:     domainCreateAndExpiryDate.CreatedDate,
+			ExpiryDate:      domainCreateAndExpiryDate.ExpiryDate,
+			DaysUntilExpiry: domainCreateAndExpiryDate.DaysUntilExpiry,
 		})
 	}
 	return dataObj, nil
@@ -135,7 +144,7 @@ func (a *AliyunDNS) ListRecords() ([]Record, error) {
 				RecordWeight:  fmt.Sprintf("%d", tea.Int32Value(v.Weight)),
 				RecordStatus:  oneStatus(tea.StringValue(v.Status)),
 				RecordRemark:  tea.StringValue(v.Remark),
-				UpdateTime:    tools.GetReadTimeMs(tea.Int64Value(v.UpdateTimestamp)),
+				UpdateTime:    carbon.CreateFromTimestampMilli(tea.Int64Value(v.UpdateTimestamp)).ToDateTimeString(),
 				FullRecord:    tea.StringValue(v.RR) + "." + domain,
 			})
 		}
@@ -186,6 +195,53 @@ func (a *AliyunDNS) getRecordList(domain string) (rst []*alidns.DescribeDomainRe
 			break
 		}
 		pageNumber++
+	}
+	return
+}
+
+// https://next.api.aliyun.com/document/Domain/2018-01-29/QueryDomainList
+// getDomainNameList 获取域名列表
+func (a *AliyunDNS) getDomainNameList() (rst []*domain.QueryDomainListResponseBodyDataDomain, err error) {
+	config := openapi.Config{
+		AccessKeyId:     tea.String(a.account.SecretID),
+		AccessKeySecret: tea.String(a.account.SecretKey),
+	}
+	config.Endpoint = tea.String("domain.aliyuncs.com")
+	client, err := domain.NewClient(&config)
+	if err != nil {
+		return nil, err
+	}
+	var (
+		pageNumber int32 = 1
+		pageSize   int32 = 500
+	)
+	for {
+		resp, err := client.QueryDomainList(&domain.QueryDomainListRequest{
+			PageNum:  tea.Int32(pageNumber),
+			PageSize: tea.Int32(pageSize),
+		})
+		if err != nil {
+			return nil, err
+		}
+		rst = append(rst, resp.Body.Data.Domain...)
+		if len(resp.Body.Data.Domain) < int(pageSize) {
+			break
+		}
+		pageNumber++
+	}
+	return
+}
+
+// getDomainCreateAndExpiryDate 获取域名的创建时间与到期时间
+func (a *AliyunDNS) getDomainCreateAndExpiryDate(domainList []*domain.QueryDomainListResponseBodyDataDomain, domain *alidns.DescribeDomainsResponseBodyDomainsDomain) (d Domain) {
+	for _, v := range domainList {
+		if tea.StringValue(v.DomainName) == tea.StringValue(domain.DomainName) {
+			d.CreatedDate = tea.StringValue(v.RegistrationDate)
+			d.ExpiryDate = tea.StringValue(v.ExpirationDate)
+			if d.ExpiryDate != "" {
+				d.DaysUntilExpiry = carbon.Now().DiffInDays(carbon.Parse(d.ExpiryDate))
+			}
+		}
 	}
 	return
 }

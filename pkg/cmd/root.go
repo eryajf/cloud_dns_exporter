@@ -8,7 +8,8 @@ import (
 	"runtime"
 
 	"github.com/eryajf/cloud_dns_exporter/pkg/export"
-	"github.com/eryajf/cloud_dns_exporter/pkg/logger"
+	"github.com/eryajf/cloud_dns_exporter/public/logger"
+
 	"github.com/eryajf/cloud_dns_exporter/public"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -63,7 +64,8 @@ func RunServer() {
 			<body>
 			<h1>Cloud DNS Exporter</h1>
 			<p><a href='/metrics'>Metrics</a></p>
-			<p><a href='https://github.com/eryajf'>By Eryajf</a></p>
+			<p><a href='https://github.com/eryajf/cloud_dns_exporter'>Source Repo</a></p>
+			<p><a href='https://github.com/eryajf'>Create By Eryajf</a></p>
 			</body>
 			</html>`))
 		if err != nil {

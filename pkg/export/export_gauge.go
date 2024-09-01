@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/eryajf/cloud_dns_exporter/pkg/logger"
+	"github.com/eryajf/cloud_dns_exporter/public/logger"
+
 	"github.com/eryajf/cloud_dns_exporter/pkg/provider"
 	"github.com/eryajf/cloud_dns_exporter/public"
 	"github.com/prometheus/client_golang/prometheus"
@@ -40,7 +41,8 @@ func NewMetrics(namespace string) *Metrics {
 					"domain_name",
 					"domain_remark",
 					"domain_status",
-					"create_time",
+					"created_date",
+					"expiry_date",
 				}),
 			public.RecordList: newGlobalMetric(namespace,
 				public.RecordList,
@@ -113,7 +115,7 @@ func (c *Metrics) Collect(ch chan<- prometheus.Metric) {
 			}
 			for _, v := range domains {
 				ch <- prometheus.MustNewConstMetric(
-					c.metrics[public.DomainList], prometheus.GaugeValue, 1, v.CloudProvider, v.CloudName, v.DomainID, v.DomainName, v.DomainRemark, v.DomainStatus, v.CreateTime)
+					c.metrics[public.DomainList], prometheus.GaugeValue, float64(v.DaysUntilExpiry), v.CloudProvider, v.CloudName, v.DomainID, v.DomainName, v.DomainRemark, v.DomainStatus, v.CreatedDate, v.ExpiryDate)
 			}
 			// get record list from cache
 			recordListCacheKey := public.RecordList + "_" + cloudProvider + "_" + cloudName
