@@ -24,15 +24,15 @@
 
 这个项目，希望能够让你轻松掌握到每个域名解析的证书信息，从而在更换证书时，不会遗漏任何一个解析。
 
-支持多种DNS提供商(目前支持阿里云，腾讯云，其他更多，期待有缘人PR)，且支持单提供商多账号管理。
+支持多种 DNS 提供商(目前支持阿里云，腾讯云，其他更多，期待有缘人PR)，且支持单提供商多账号管理。
 
 ## 如何使用
 
 可以直接在 [Release](https://github.com/eryajf/cloud_dns_exporter/releases) 发布页面下载二进制，然后更改配置文件，直接运行即可。
 
-默认端口监听在`21798`，为什么选择这个端口，因为项目对应在grafana中的仪表板ID就是[21798](https://grafana.com/grafana/dashboards/21798-cloud-dns-record-info/)。
+默认端口监听在 `21798`，为什么选择这个端口，因为项目对应在 Grafana 中的仪表板ID就是 [21798](https://grafana.com/grafana/dashboards/21798-cloud-dns-record-info/)。
 
-你也可以选择使用docker部署，部署时把config.yaml在本地配置好，然后运行时，通过挂载(`-v ./config.yaml:/app/config.yaml`)覆盖容器内默认配置即可。
+你也可以选择使用 Docker 部署，部署时把 `config.yaml` 在本地配置好，然后运行时，通过挂载(`-v ./config.yaml:/app/config.yaml`)覆盖容器内默认配置即可。
 
 镜像地址：
 - 国外: `eryajf/cloud_dns_exporter`
@@ -108,13 +108,19 @@ record_cert_info{
     error_msg="错误信息"} 30 (此value为记录的证书距离到期的天数)
 ```
 
+## 已支持 DNS 服务商
+
+- [x] Tencent DnsPod
+- [x] Aliyun Dns
+- [x] Godaddy
+
 ## Grafana 仪表板
 
 项目对应的 Grafana Dashboard ID: [21798](https://grafana.com/grafana/dashboards/21798-cloud-dns-record-info/)
 
 概览与域名列表：
 
-![](https://t.eryajf.net/imgs/2024/08/1725118602116.webp)
+![](https://t.eryajf.net/imgs/2024/09/1725288099522.webp)
 
 解析记录与证书详情列表：
 
