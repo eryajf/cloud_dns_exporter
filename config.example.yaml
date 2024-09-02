@@ -1,6 +1,9 @@
 cloud_providers:
+  # ↓↓↓ -------------------------- 1. DNS提供商Tencent，请勿更改此行，如无需腾讯云的配置，可删除此段配置至 aliyun
   tencent:
+    # ↓↓↓ ------------------------ 2. 固定配置，无需更改
     accounts:
+      # ↓↓↓ ---------------------- 3. 腾讯云账号配置，可配置多个，给每个账号取个名字，如 t1、t2
       - name: t1
         secretId: "xxxxx"
         secretKey: "xxxxx"
@@ -12,3 +15,4 @@ cloud_providers:
       - name: a1
         secretId: "xxxxx"
         secretKey: "xxxxx"
+  # 目前仅支持腾讯云和阿里云，如需支持更多云厂商，请提交 issue，也欢迎 PR
