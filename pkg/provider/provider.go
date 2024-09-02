@@ -32,6 +32,16 @@ func init() {
 			},
 		}
 	})
+	Factory.Register(public.GodaddyDnsProvider, func(account map[string]string) DNSProvider {
+		return &GodaddyDNS{
+			account: public.Account{
+				CloudProvider: public.GodaddyDnsProvider,
+				CloudName:     account["name"],
+				SecretID:      account["secretId"],
+				SecretKey:     account["secretKey"],
+			},
+		}
+	})
 }
 
 // Doamin 域名信息
@@ -123,7 +133,7 @@ func (f *DNSProviderFactory) Create(cloudProvider string, account map[string]str
 // 统一记录状态的值
 func oneStatus(status string) string {
 	// tencent 的记录状态是 ENABLE 和 DISABLE
-	if status == "ENABLE" {
+	if status == "ENABLE" || status == "ACTIVE" {
 		return "enable"
 	}
 	if status == "DISABLE" {

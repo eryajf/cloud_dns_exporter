@@ -31,6 +31,8 @@ github.com/aliyun/credentials-go v1.3.1 h1:uq/0v7kWrxmoLGpqjx7vtQ/s03f0zR//0br/x
 github.com/aliyun/credentials-go v1.3.1/go.mod h1:8jKYhQuDawt8x2+fusqa1Y6mPxemTsBEN04dgcAcYz0=
 github.com/allegro/bigcache/v3 v3.1.0 h1:H2Vp8VOvxcrB91o86fUSVJFqeuz8kpyyB02eH3bSzwk=
 github.com/allegro/bigcache/v3 v3.1.0/go.mod h1:aPyh7jEvrog9zAwx5N7+JUQX5dZTSGpxF1LAR4dr35I=
+github.com/alyx/go-daddy v0.0.0-20240819232932-c2e4d209da9b h1:ITwV8o+xmGVD6IbBvjIlOoAsxX7me0ounq5UwzwdQlk=
+github.com/alyx/go-daddy v0.0.0-20240819232932-c2e4d209da9b/go.mod h1:JEEXFFpdZOowtBJN6+kUCQ+okHa4UfZtMBfWVRf71EM=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1 h1:HwpRHbFMcZLEVr42D4p7XBqjyuxQH5SMiErDT4WkJ2k=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1/go.mod h1:uYgXzlJ7ZpABp8OJ+exZzJJhRNQ2ASbcXHWsFqH8hp8=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=

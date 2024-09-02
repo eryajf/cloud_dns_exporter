@@ -10,6 +10,7 @@ require (
 	github.com/alibabacloud-go/domain-20180129/v4 v4.2.0
 	github.com/alibabacloud-go/tea v1.2.2
 	github.com/allegro/bigcache/v3 v3.1.0
+	github.com/alyx/go-daddy v0.0.0-20240819232932-c2e4d209da9b
 	github.com/charmbracelet/log v0.2.2
 	github.com/golang-module/carbon/v2 v2.3.12
 	github.com/prometheus/client_golang v1.16.0

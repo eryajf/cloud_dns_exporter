@@ -15,4 +15,9 @@ cloud_providers:
       - name: a1
         secretId: "xxxxx"
         secretKey: "xxxxx"
-  # 目前仅支持腾讯云和阿里云，如需支持更多云厂商，请提交 issue，也欢迎 PR
+  godaddy:
+    accounts:
+      - name: g1
+        secretId: "xxxxx"
+        secretKey: "xxxxx"
+  # 目前支持Tencent, Aliyun, Godaddy，如需支持更多云厂商，请提交 issue，也欢迎 PR
