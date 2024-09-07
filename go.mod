@@ -12,6 +12,7 @@ require (
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/alyx/go-daddy v0.0.0-20240819232932-c2e4d209da9b
 	github.com/charmbracelet/log v0.2.2
+	github.com/go-resty/resty/v2 v2.14.0
 	github.com/golang-module/carbon/v2 v2.3.12
 	github.com/prometheus/client_golang v1.16.0
 	github.com/robfig/cron/v3 v3.0.1
@@ -30,7 +31,6 @@ require (
 	github.com/alibabacloud-go/tea-xml v1.1.3 // indirect
 	github.com/aliyun/credentials-go v1.3.1 // indirect
 	github.com/clbanning/mxj/v2 v2.5.5 // indirect
-	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.12.1-0.20240709150035-ccf4b4329d21 // indirect

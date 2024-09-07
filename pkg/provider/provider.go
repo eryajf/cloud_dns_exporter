@@ -42,6 +42,16 @@ func init() {
 			},
 		}
 	})
+	Factory.Register(public.DNSLaDnsProvider, func(account map[string]string) DNSProvider {
+		return &DNSLaDNS{
+			account: public.Account{
+				CloudProvider: public.DNSLaDnsProvider,
+				CloudName:     account["name"],
+				SecretID:      account["secretId"],
+				SecretKey:     account["secretKey"],
+			},
+		}
+	})
 }
 
 // Doamin 域名信息
@@ -133,7 +143,7 @@ func (f *DNSProviderFactory) Create(cloudProvider string, account map[string]str
 // 统一记录状态的值
 func oneStatus(status string) string {
 	// tencent 的记录状态是 ENABLE 和 DISABLE
-	if status == "ENABLE" || status == "ACTIVE" {
+	if status == "ENABLE" || status == "ACTIVE" || status == "1" {
 		return "enable"
 	}
 	if status == "DISABLE" {
