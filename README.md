@@ -113,6 +113,7 @@ record_cert_info{
 - [x] Tencent DnsPod
 - [x] Aliyun Dns
 - [x] Godaddy
+- [x] DNSLA
 
 ## Grafana 仪表板
 
