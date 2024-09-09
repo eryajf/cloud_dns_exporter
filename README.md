@@ -40,6 +40,19 @@
 
 目前应用还提供了`-v`参数，用于打印当前所使用的版本信息。
 
+## 快速体验
+本项目提供了docker-compose.yml配置文件用于快速体验。在启动前，请先在docker-compose.yml中配置好你的DNS服务商的AK/SK相关信息。然后在docker-compose.yml所在目录下执行以下命令:
+```bash
+docker-compose up -d
+```
+> 不懂docker-compose的用户,可以参考: [docker-compose官方教程](https://docs.docker.com/compose/reference/) 或 [中文教程](https://www.runoob.com/docker/docker-compose.html)
+
+docker-compose.yml中定义了三个容器，分别是cloud_dns_exporter(用于获取域名和解析/证书信息)，grafana(用于展示域名和解析/证书信息)，prometheus(用于持久化存储域名和解析/证书信息)
+
+使用docker-compose.yml启动后，通过http://localhost:3000访问Grafana的WebUI，使用默认的用户名和密码admin/admin登录。
+
+Grafana中添加Prometheus类型的数据源，地址为http://prometheus:9090，然后保存。再导入Grafana Dashboard 21798，数据源选择刚才添加的prometheus数据源，即可看到UI展示效果。
+
 ## 一些注意
 
 - 为了提高请求指标数据时的效率，项目设计为通过定时任务提前将数据缓存的方案，默认情况下，域名及解析记录信息为30s/次，证书信息在每天凌晨获取一次。如果你想重新获取，则重启一次应用即可。
