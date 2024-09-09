@@ -1,0 +1,61 @@
+version: '3'
+services:
+  cloud_dns_exporter:
+    image: registry.cn-hangzhou.aliyuncs.com/eryajf/cloud_dns_exporter:latest
+    container_name: cloud_dns_exporter
+    ports:
+      - "21798:21798"
+    configs:
+      - source: cloud_dns_exporter_config
+        target: /app/config.yaml
+    environment:
+      - TZ=Asia/Shanghai
+  grafana:
+    image: bitnami/grafana:11.2.0
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin  #设置admin用户默认密码
+      - TZ=Asia/Shanghai
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/opt/bitnami/grafana/data
+  prometheus:
+    image: bitnami/prometheus:2.54.1
+    container_name: prometheus
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "9090:9090"
+    configs:
+      - source: prometheus_config
+        target: /opt/bitnami/prometheus/conf/prometheus.yml
+    volumes:
+      - prometheus_data:/opt/bitnami/prometheus/data
+
+# 示例配置
+configs:
+  # 云解析配置,以阿里云DNS为例
+  cloud_dns_exporter_config:
+    content: |
+      cloud_providers:
+        aliyun:
+          accounts:
+            - name: a1
+              secretId: "your cloud dns accessKey"
+              secretKey: "your cloud dns secretKey"
+  # prometheus配置示例(无需修改)
+  prometheus_config:
+    content: |
+      scrape_configs:
+        - job_name: 'cloud_dns_exporter'
+          metrics_path: 'metrics'
+          scrape_interval: 15s
+          static_configs:
+            - targets: ['cloud_dns_exporter:21798']
+
+volumes:
+  grafana_data:
+    driver: local
+  prometheus_data:
+    driver: local
