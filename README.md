@@ -41,7 +41,9 @@
 目前应用还提供了`-v`参数，用于打印当前所使用的版本信息。
 
 ## 快速体验
-本项目提供了docker-compose.yml配置文件用于快速体验。在启动前，请先在docker-compose.yml中配置好你的DNS服务商的AK/SK相关信息。然后在docker-compose.yml所在目录下执行以下命令:
+
+本项目提供了docker-compose.yml配置文件用于快速体验。在启动前，请先在docker-compose.yml中配置好你的DNS服务商的AK/SK相关信息，并确保你的docker-compose的版本不低于[2.23.0](https://github.com/compose-spec/compose-spec/pull/429)。然后在docker-compose.yml所在目录下执行以下命令:
+
 ```bash
 docker-compose up -d
 ```
