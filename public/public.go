@@ -3,11 +3,13 @@ package public
 import (
 	"context"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/allegro/bigcache/v3"
 	"github.com/eryajf/cloud_dns_exporter/public/logger"
+	"github.com/google/uuid"
 
 	"gopkg.in/yaml.v2"
 )
@@ -37,6 +39,7 @@ var (
 	Config    *Configuration
 	Cache     *bigcache.BigCache
 	CertCache *bigcache.BigCache
+	ID        uuid.UUID = uuid.New()
 )
 
 type Account struct {
@@ -80,4 +83,9 @@ func InitCache() {
 	if err != nil {
 		logger.Fatal("init cache failed: ", err)
 	}
+}
+
+// GetID 获取唯一ID
+func GetID() string {
+	return strings.ReplaceAll(ID.String(), "-", "")
 }

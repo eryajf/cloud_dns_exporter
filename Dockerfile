@@ -1,12 +1,7 @@
-FROM registry.cn-hangzhou.aliyuncs.com/eryajf/golang:1.22.2-alpine3.19  AS builder
+FROM registry.cn-hangzhou.aliyuncs.com/eryajf/golang:1.22.2-alpine3.19-eryajf  AS builder
 
 WORKDIR /app
-
 ENV GOPROXY="https://goproxy.io"
-
-RUN sed -i "s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g" /etc/apk/repositories \
-    && apk upgrade && apk add --no-cache --virtual .build-deps \
-    ca-certificates gcc g++ curl upx git make
 
 ADD . .
 

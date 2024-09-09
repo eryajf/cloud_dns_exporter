@@ -139,7 +139,7 @@ func (a *AmazonDNS) ListRecords() ([]Record, error) {
 				CloudProvider: a.account.CloudProvider,
 				CloudName:     a.account.CloudName,
 				DomainName:    domain,
-				RecordID:      tea.StringValue(record.SetIdentifier),
+				RecordID:      public.GetID(),
 				RecordType:    string(record.Type),
 				RecordWeight:  fmt.Sprintf("%d", record.Weight),
 				RecordStatus:  oneStatus("enable"),
@@ -221,29 +221,6 @@ func (a *AmazonDNS) getRecordList(domainId string) (rst []types.ResourceRecordSe
 	}
 	return
 }
-
-// // https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_ListDomains.html
-// // getDomainNameList 获取域名列表
-// func (a *AmazonDNS) getDomainNameList() (rst []domainTypes.DomainSummary, err error) {
-// 	client := NewAwsDomainClient(a.account.SecretID, a.account.SecretKey)
-// 	var Marker *string
-// 	for {
-// 		output, err := client.ListDomains(context.Background(), &route53domains.ListDomainsInput{
-// 			Marker: Marker,
-// 		})
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		for _, domain := range output.Domains {
-// 			rst = append(rst, domain)
-// 		}
-// 		if output.NextPageMarker == nil {
-// 			break
-// 		}
-// 		Marker = output.NextPageMarker
-// 	}
-// 	return
-// }
 
 // 域名详情接口 https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_GetDomainDetail.html
 // getDomainCreateAndExpiryDate 获取域名创建时间、过期时间, 通过域名详情获取

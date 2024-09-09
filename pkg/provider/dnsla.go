@@ -124,7 +124,7 @@ func (d *DNSLaDNS) ListRecords() ([]Record, error) {
 				CloudProvider: d.account.CloudProvider,
 				CloudName:     d.account.CloudName,
 				DomainName:    domain,
-				RecordID:      v.Data,
+				RecordID:      public.GetID(),
 				RecordType:    getRecordType(v.Type),
 				RecordName:    v.DisplayHost,
 				RecordValue:   v.Data,
