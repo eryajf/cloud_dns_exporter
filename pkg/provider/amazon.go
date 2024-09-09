@@ -71,7 +71,7 @@ func (a *AmazonDNS) ListDomains() ([]Domain, error) {
 		dataObj = append(dataObj, Domain{
 			CloudProvider:   a.account.CloudProvider,
 			CloudName:       a.account.CloudName,
-			DomainID:        strings.TrimPrefix(tea.StringValue(domain.Id), "/"),
+			DomainID:        strings.TrimPrefix(tea.StringValue(domain.Id), "/hostedzone/"),
 			DomainName:      fmt.Sprintf(domainName),
 			DomainRemark:    tea.StringValue(nil),
 			DomainStatus:    "enable",
