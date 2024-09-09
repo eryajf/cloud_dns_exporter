@@ -135,6 +135,7 @@ record_cert_info{
 - [x] Aliyun Dns
 - [x] Godaddy
 - [x] DNSLA
+- [x] Amazon
 
 ## Grafana 仪表板
 
