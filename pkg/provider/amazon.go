@@ -3,19 +3,19 @@ package provider
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
+	"sync"
+	"time"
+
 	"github.com/alibabacloud-go/tea/tea"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53/types"
 	"github.com/aws/aws-sdk-go-v2/service/route53domains"
-	domainTypes "github.com/aws/aws-sdk-go-v2/service/route53domains/types"
 	"github.com/eryajf/cloud_dns_exporter/public"
 	"github.com/golang-module/carbon/v2"
 	"golang.org/x/net/context"
-	"strings"
-	"sync"
-	"time"
 )
 
 type AmazonDNS struct {
@@ -78,7 +78,7 @@ func (a *AmazonDNS) ListDomains() ([]Domain, error) {
 				CloudProvider:   a.account.CloudProvider,
 				CloudName:       a.account.CloudName,
 				DomainID:        strings.TrimPrefix(tea.StringValue(domain.Id), "/hostedzone/"),
-				DomainName:      fmt.Sprintf(domainName),
+				DomainName:      domainName,
 				DomainRemark:    tea.StringValue(nil),
 				DomainStatus:    "enable",
 				CreatedDate:     domainCreateAndExpiryDate.CreatedDate,
@@ -140,7 +140,7 @@ func (a *AmazonDNS) ListRecords() ([]Record, error) {
 				CloudName:     a.account.CloudName,
 				DomainName:    domain,
 				RecordID:      tea.StringValue(record.SetIdentifier),
-				RecordType:    fmt.Sprintf("%s", record.Type),
+				RecordType:    string(record.Type),
 				RecordWeight:  fmt.Sprintf("%d", record.Weight),
 				RecordStatus:  oneStatus("enable"),
 				RecordRemark:  tea.StringValue(nil),
@@ -184,9 +184,7 @@ func (a *AmazonDNS) getDomainList() (rst []types.HostedZone, err error) {
 		if err != nil {
 			return nil, err
 		}
-		for _, zone := range output.HostedZones {
-			rst = append(rst, zone)
-		}
+		rst = append(rst, output.HostedZones...)
 		if output.NextMarker == nil {
 			break
 		}
@@ -224,28 +222,28 @@ func (a *AmazonDNS) getRecordList(domainId string) (rst []types.ResourceRecordSe
 	return
 }
 
-// https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_ListDomains.html
-// getDomainNameList 获取域名列表
-func (a *AmazonDNS) getDomainNameList() (rst []domainTypes.DomainSummary, err error) {
-	client := NewAwsDomainClient(a.account.SecretID, a.account.SecretKey)
-	var Marker *string
-	for {
-		output, err := client.ListDomains(context.Background(), &route53domains.ListDomainsInput{
-			Marker: Marker,
-		})
-		if err != nil {
-			return nil, err
-		}
-		for _, domain := range output.Domains {
-			rst = append(rst, domain)
-		}
-		if output.NextPageMarker == nil {
-			break
-		}
-		Marker = output.NextPageMarker
-	}
-	return
-}
+// // https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_ListDomains.html
+// // getDomainNameList 获取域名列表
+// func (a *AmazonDNS) getDomainNameList() (rst []domainTypes.DomainSummary, err error) {
+// 	client := NewAwsDomainClient(a.account.SecretID, a.account.SecretKey)
+// 	var Marker *string
+// 	for {
+// 		output, err := client.ListDomains(context.Background(), &route53domains.ListDomainsInput{
+// 			Marker: Marker,
+// 		})
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		for _, domain := range output.Domains {
+// 			rst = append(rst, domain)
+// 		}
+// 		if output.NextPageMarker == nil {
+// 			break
+// 		}
+// 		Marker = output.NextPageMarker
+// 	}
+// 	return
+// }
 
 // 域名详情接口 https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_GetDomainDetail.html
 // getDomainCreateAndExpiryDate 获取域名创建时间、过期时间, 通过域名详情获取

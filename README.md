@@ -42,18 +42,24 @@
 
 ## 快速体验
 
-本项目提供了docker-compose.yml配置文件用于快速体验。在启动前，请先在docker-compose.yml中配置好你的DNS服务商的AK/SK相关信息，并确保你的docker-compose的版本不低于[2.23.0](https://github.com/compose-spec/compose-spec/pull/429)。然后在docker-compose.yml所在目录下执行以下命令:
+本项目提供了 `docker-compose.yml` 配置文件用于快速体验。在启动前，请先在 `docker-compose.yml` 中配置好你的DNS服务商的`AK/SK` 相关信息，并确保你的 `docker-compose` 的版本不低于[2.23.0](https://github.com/compose-spec/compose-spec/pull/429)。
+
+然后在`docker-compose.yml`所在目录下执行以下命令:
 
 ```bash
 docker-compose up -d
 ```
+
 > 不懂docker-compose的用户,可以参考: [docker-compose官方教程](https://docs.docker.com/compose/reference/) 或 [中文教程](https://www.runoob.com/docker/docker-compose.html)
 
-docker-compose.yml中定义了三个容器，分别是cloud_dns_exporter(用于获取域名和解析/证书信息)，grafana(用于展示域名和解析/证书信息)，prometheus(用于持久化存储域名和解析/证书信息)
+`docker-compose.yml` 中定义了三个容器，分别是:
+- `cloud_dns_exporter`: 用于获取域名和解析/证书信息
+- `grafana`: 用于展示域名和解析/证书信息
+- `prometheus`: 用于持久化存储域名和解析/证书信息
 
-使用docker-compose.yml启动后，通过http://localhost:3000访问Grafana的WebUI，使用默认的用户名和密码admin/admin登录。
+使用`docker-compose.yml`启动后，通过 http://localhost:3000 访问 `Grafana`，使用默认的用户名和密码`admin/admin`登录。
 
-Grafana中添加Prometheus类型的数据源，地址为http://prometheus:9090，然后保存。再导入Grafana Dashboard 21798，数据源选择刚才添加的prometheus数据源，即可看到UI展示效果。
+`Grafana` 中添加 `Prometheus` 类型的数据源，地址为 `http://prometheus:9090`，然后保存。再导入`Grafana Dashboard 21798`，数据源选择刚才添加的 `prometheus` 数据源，即可看到 `UI` 展示效果。
 
 ## 一些注意
 
