@@ -20,9 +20,14 @@ cloud_providers:
       - name: g1
         secretId: "xxxxx"
         secretKey: "xxxxx"
+  amazon:
+    accounts:
+      - name: a1
+        secretId: "xxxxx"
+        secretKey: "xxxxx"
   dnsla:
     accounts:
       - name: d1
         secretId: "xxxxx"
         secretKey: "xxxxx"
-  # 目前支持Tencent, Aliyun, Godaddy,DNALA，如需支持更多云厂商，请提交 issue，也欢迎 PR
+  # 目前支持Tencent, Aliyun, Godaddy,DNALA, Amazon，如需支持更多云厂商，请提交 issue，也欢迎 PR

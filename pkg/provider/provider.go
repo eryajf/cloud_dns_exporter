@@ -42,6 +42,16 @@ func init() {
 			},
 		}
 	})
+	Factory.Register(public.AmazonDnsProvider, func(account map[string]string) DNSProvider {
+		return &AmazonDNS{
+			account: public.Account{
+				CloudProvider: public.AmazonDnsProvider,
+				CloudName:     account["name"],
+				SecretID:      account["secretId"],
+				SecretKey:     account["secretKey"],
+			},
+		}
+	})
 	Factory.Register(public.DNSLaDnsProvider, func(account map[string]string) DNSProvider {
 		return &DNSLaDNS{
 			account: public.Account{
