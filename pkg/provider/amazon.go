@@ -62,13 +62,16 @@ func (a *AmazonDNS) ListDomains() ([]Domain, error) {
 		return nil, err
 	}
 	domainNames, err := a.getDomainNameList()
+	if err != nil {
+		return nil, err
+	}
 	for _, domain := range domains {
-		domainName := strings.TrimSuffix(*domain.Name, ".")
+		domainName := strings.TrimSuffix(tea.StringValue(domain.Name), ".")
 		domainCreateAndExpiryDate := a.getDomainCreateAndExpiryDate(domainNames, domainName)
 		dataObj = append(dataObj, Domain{
 			CloudProvider:   a.account.CloudProvider,
 			CloudName:       a.account.CloudName,
-			DomainID:        tea.StringValue(domain.Id),
+			DomainID:        strings.TrimPrefix(tea.StringValue(domain.Id), "/"),
 			DomainName:      fmt.Sprintf(domainName),
 			DomainRemark:    tea.StringValue(nil),
 			DomainStatus:    "enable",
@@ -140,7 +143,7 @@ func (a *AmazonDNS) ListRecords() ([]Record, error) {
 				RecordStatus:  oneStatus("enable"),
 				RecordRemark:  tea.StringValue(nil),
 				UpdateTime:    carbon.CreateFromTimestampMilli(tea.Int64Value(nil)).ToDateTimeString(),
-				FullRecord:    tea.StringValue(record.Name) + "." + domain,
+				FullRecord:    tea.StringValue(record.Name),
 			}
 			if record.ResourceRecords != nil {
 				for _, record := range record.ResourceRecords {
