@@ -23,6 +23,7 @@ const (
 	TencentDnsProvider string = "tencent"
 	AliyunDnsProvider  string = "aliyun"
 	GodaddyDnsProvider string = "godaddy"
+	DNSLaDnsProvider   string = "dnsla"
 	HuaweiDnsProvider  string = "huawei"
 	AmazonDnsProvider  string = "amazon"
 	// Metrics Name
