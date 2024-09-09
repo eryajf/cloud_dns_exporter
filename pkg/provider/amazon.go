@@ -56,30 +56,39 @@ func (a *AmazonDNS) ListDomains() ([]Domain, error) {
 		SecretKey:     a.account.SecretKey,
 	})
 	a.client = ad.client
-	var dataObj []Domain
+	var (
+		dataObj []Domain
+		wg      sync.WaitGroup
+		mu      sync.Mutex
+	)
 	domains, err := a.getDomainList()
 	if err != nil {
 		return nil, err
 	}
-	domainNames, err := a.getDomainNameList()
-	if err != nil {
-		return nil, err
-	}
+	ticker := time.NewTicker(100 * time.Millisecond)
 	for _, domain := range domains {
-		domainName := strings.TrimSuffix(tea.StringValue(domain.Name), ".")
-		domainCreateAndExpiryDate := a.getDomainCreateAndExpiryDate(domainNames, domainName)
-		dataObj = append(dataObj, Domain{
-			CloudProvider:   a.account.CloudProvider,
-			CloudName:       a.account.CloudName,
-			DomainID:        strings.TrimPrefix(tea.StringValue(domain.Id), "/hostedzone/"),
-			DomainName:      fmt.Sprintf(domainName),
-			DomainRemark:    tea.StringValue(nil),
-			DomainStatus:    "enable",
-			CreatedDate:     domainCreateAndExpiryDate.CreatedDate,
-			ExpiryDate:      domainCreateAndExpiryDate.ExpiryDate,
-			DaysUntilExpiry: domainCreateAndExpiryDate.DaysUntilExpiry,
-		})
+		wg.Add(1)
+		go func(domain types.HostedZone) {
+			defer wg.Done()
+			<-ticker.C
+			domainName := strings.TrimSuffix(tea.StringValue(domain.Name), ".")
+			domainCreateAndExpiryDate := a.getDomainCreateAndExpiryDate(domainName)
+			mu.Lock()
+			dataObj = append(dataObj, Domain{
+				CloudProvider:   a.account.CloudProvider,
+				CloudName:       a.account.CloudName,
+				DomainID:        strings.TrimPrefix(tea.StringValue(domain.Id), "/hostedzone/"),
+				DomainName:      fmt.Sprintf(domainName),
+				DomainRemark:    tea.StringValue(nil),
+				DomainStatus:    "enable",
+				CreatedDate:     domainCreateAndExpiryDate.CreatedDate,
+				ExpiryDate:      domainCreateAndExpiryDate.ExpiryDate,
+				DaysUntilExpiry: domainCreateAndExpiryDate.DaysUntilExpiry,
+			})
+			mu.Unlock()
+		}(domain)
 	}
+	wg.Wait()
 	return dataObj, nil
 }
 
@@ -110,7 +119,7 @@ func (a *AmazonDNS) ListRecords() ([]Record, error) {
 	for _, domain := range domains {
 		wg.Add(1)
 		// aws 接口并发限制
-		time.Sleep(1 * time.Second)
+		time.Sleep(200 * time.Millisecond)
 		go func(domain Domain) {
 			defer wg.Done()
 			<-ticker.C
@@ -136,7 +145,7 @@ func (a *AmazonDNS) ListRecords() ([]Record, error) {
 				RecordStatus:  oneStatus("enable"),
 				RecordRemark:  tea.StringValue(nil),
 				UpdateTime:    carbon.CreateFromTimestampMilli(tea.Int64Value(nil)).ToDateTimeString(),
-				FullRecord:    tea.StringValue(record.Name),
+				FullRecord:    strings.TrimSuffix(tea.StringValue(record.Name), "."),
 			}
 			// aws域名返回完整域名处理
 			recordName := strings.TrimSuffix(tea.StringValue(record.Name), ".")
@@ -240,23 +249,18 @@ func (a *AmazonDNS) getDomainNameList() (rst []domainTypes.DomainSummary, err er
 
 // 域名详情接口 https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_GetDomainDetail.html
 // getDomainCreateAndExpiryDate 获取域名创建时间、过期时间, 通过域名详情获取
-func (a *AmazonDNS) getDomainCreateAndExpiryDate(domainList []domainTypes.DomainSummary, domainName string) (d Domain) {
+func (a *AmazonDNS) getDomainCreateAndExpiryDate(domainName string) (d Domain) {
 	client := NewAwsDomainClient(a.account.SecretID, a.account.SecretKey)
-	for _, domain := range domainList {
-		if tea.StringValue(domain.DomainName) == domainName {
-			domainDetail, err := client.GetDomainDetail(context.Background(), &route53domains.GetDomainDetailInput{
-				DomainName: tea.String(domainName),
-			})
-			if err != nil {
-				return
-			}
-			d.CreatedDate = domainDetail.CreationDate.String()
-			d.ExpiryDate = domainDetail.ExpirationDate.String()
-			if d.ExpiryDate != "" {
-				d.DaysUntilExpiry = carbon.Now().DiffInDays(carbon.Parse(d.ExpiryDate))
-			}
-			break
-		}
+	domainDetail, err := client.GetDomainDetail(context.Background(), &route53domains.GetDomainDetailInput{
+		DomainName: tea.String(domainName),
+	})
+	if err != nil {
+		return
+	}
+	d.CreatedDate = domainDetail.CreationDate.String()
+	d.ExpiryDate = domainDetail.ExpirationDate.String()
+	if d.ExpiryDate != "" {
+		d.DaysUntilExpiry = carbon.Now().DiffInDays(carbon.Parse(d.ExpiryDate))
 	}
 	return
 }
