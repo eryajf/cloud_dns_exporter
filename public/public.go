@@ -24,6 +24,7 @@ const (
 	AliyunDnsProvider  string = "aliyun"
 	GodaddyDnsProvider string = "godaddy"
 	HuaweiDnsProvider  string = "huawei"
+	AmazonDnsProvider  string = "amazon"
 	// Metrics Name
 	DomainList     string = "domain_list"
 	RecordList     string = "record_list"
