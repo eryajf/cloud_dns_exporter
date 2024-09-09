@@ -107,12 +107,10 @@ func (a *AmazonDNS) ListRecords() ([]Record, error) {
 	}
 	results := make(map[string][]types.ResourceRecordSet)
 	ticker := time.NewTicker(100 * time.Millisecond)
-	num := 0
 	for _, domain := range domains {
 		wg.Add(1)
 		// aws 接口并发限制
 		time.Sleep(1 * time.Second)
-		num++
 		go func(domain Domain) {
 			defer wg.Done()
 			<-ticker.C
@@ -124,9 +122,6 @@ func (a *AmazonDNS) ListRecords() ([]Record, error) {
 			results[domain.DomainName] = records
 			mu.Unlock()
 		}(domain)
-		if num >= 2 {
-			break
-		}
 	}
 	wg.Wait()
 	for domain, record := range results {
@@ -137,13 +132,23 @@ func (a *AmazonDNS) ListRecords() ([]Record, error) {
 				DomainName:    domain,
 				RecordID:      tea.StringValue(record.SetIdentifier),
 				RecordType:    fmt.Sprintf("%s", record.Type),
-				RecordName:    tea.StringValue(record.Name),
-				RecordTTL:     fmt.Sprintf("%d", *record.TTL),
 				RecordWeight:  fmt.Sprintf("%d", record.Weight),
 				RecordStatus:  oneStatus("enable"),
 				RecordRemark:  tea.StringValue(nil),
 				UpdateTime:    carbon.CreateFromTimestampMilli(tea.Int64Value(nil)).ToDateTimeString(),
 				FullRecord:    tea.StringValue(record.Name),
+			}
+			// aws域名返回完整域名处理
+			recordName := strings.TrimSuffix(tea.StringValue(record.Name), ".")
+			if len(strings.Split(recordName, ".")) > 2 {
+				recordInfo.RecordName = strings.TrimSuffix(strings.Replace(recordName, domain, "", 1), ".")
+			} else {
+				recordInfo.RecordName = "@"
+			}
+			if record.TTL == nil {
+				recordInfo.RecordTTL = "300"
+			} else {
+				recordInfo.RecordTTL = fmt.Sprintf("%d", *record.TTL)
 			}
 			if record.ResourceRecords != nil {
 				for _, record := range record.ResourceRecords {
