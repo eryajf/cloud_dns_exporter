@@ -35,4 +35,4 @@ cloud_providers:
       - name: a1
         secretId: "xxxxx" # 注册邮箱
         secretKey: "xxxxx" # ApiKey密钥
-  # 目前支持Tencent, Aliyun, Godaddy, DNALA, Amazon, CloudFlare，如需支持更多云厂商，请提交 issue，也欢迎 PR
+  # 目前支持 Tencent, Aliyun, Godaddy, DNALA, Amazon, Cloudflare，如需支持更多云厂商，请提交 issue，也欢迎 PR

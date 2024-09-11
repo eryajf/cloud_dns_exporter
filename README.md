@@ -1,3 +1,5 @@
+[English](./README-en.md) | 简体中文
+
 <div align="center">
 <h1>Cloud DNS Exporter</h1>
 
@@ -24,7 +26,7 @@
 
 这个项目，希望能够让你轻松掌握到每个域名解析的证书信息，从而在更换证书时，不会遗漏任何一个解析。
 
-支持多种 DNS 提供商(目前支持阿里云，腾讯云，其他更多，期待有缘人PR)，且支持单提供商多账号管理。
+支持多种 DNS 提供商，且支持单提供商多账号管理，同时支持自定义配置文件获取证书信息。
 
 ## 如何使用
 
@@ -135,7 +137,8 @@ record_cert_info{
 - [x] Aliyun Dns
 - [x] Godaddy
 - [x] DNSLA
-- [x] Amazon
+- [x] Amazon Route53
+- [x] Cloudflare
 
 ## Grafana 仪表板
 
