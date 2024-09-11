@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"sync"
+	"time"
+
 	"github.com/alibabacloud-go/tea/tea"
 	"github.com/cloudflare/cloudflare-go"
 	"github.com/eryajf/cloud_dns_exporter/public"
 	"github.com/golang-module/carbon/v2"
-	"sync"
-	"time"
 )
 
 type CloudFlareDNS struct {
@@ -149,9 +150,7 @@ func (cf *CloudFlareDNS) getDomainList() (rst []cloudflare.Zone, err error) {
 		fmt.Printf("cloudflare list zones error: %v", err)
 		return
 	}
-	for _, zone := range zones {
-		rst = append(rst, zone)
-	}
+	rst = append(rst, zones...)
 	return
 }
 
@@ -182,9 +181,7 @@ func (cf *CloudFlareDNS) getRecordList(domain string) (rst []cloudflare.DNSRecor
 		if err != nil {
 			return nil, err
 		}
-		for _, record := range records {
-			rst = append(rst, record)
-		}
+		rst = append(rst, records...)
 		if page*pageSize > r.Total {
 			break
 		}
