@@ -125,7 +125,7 @@ func (g *GodaddyDNS) ListRecords() ([]Record, error) {
 				CloudProvider: g.account.CloudProvider,
 				CloudName:     g.account.CloudName,
 				DomainName:    domain,
-				RecordID:      v.Data,
+				RecordID:      public.GetID(),
 				RecordType:    v.Type,
 				RecordName:    v.Name,
 				RecordValue:   v.Data,
