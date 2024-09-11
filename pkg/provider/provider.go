@@ -62,6 +62,16 @@ func init() {
 			},
 		}
 	})
+	Factory.Register(public.CloudFlareDnsProvider, func(account map[string]string) DNSProvider {
+		return &CloudFlareDNS{
+			account: public.Account{
+				CloudProvider: public.CloudFlareDnsProvider,
+				CloudName:     account["name"],
+				SecretID:      account["secretId"],
+				SecretKey:     account["secretKey"],
+			},
+		}
+	})
 }
 
 // Doamin 域名信息

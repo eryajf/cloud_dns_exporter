@@ -16,6 +16,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/route53 v1.43.2
 	github.com/aws/aws-sdk-go-v2/service/route53domains v1.25.6
 	github.com/charmbracelet/log v0.2.2
+	github.com/cloudflare/cloudflare-go v0.103.0
 	github.com/go-resty/resty/v2 v2.14.0
 	github.com/golang-module/carbon/v2 v2.3.12
 	github.com/google/uuid v1.6.0
@@ -39,12 +40,16 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.17 // indirect
 	github.com/aws/smithy-go v1.20.4 // indirect
 	github.com/clbanning/mxj/v2 v2.5.5 // indirect
+	github.com/goccy/go-json v0.10.3 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.12.1-0.20240709150035-ccf4b4329d21 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tjfoc/gmsm v1.3.2 // indirect
+	golang.org/x/text v0.17.0 // indirect
+	golang.org/x/time v0.6.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 )
 
