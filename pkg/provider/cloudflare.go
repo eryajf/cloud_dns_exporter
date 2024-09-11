@@ -6,12 +6,10 @@ import (
 	"fmt"
 	"github.com/alibabacloud-go/tea/tea"
 	"github.com/cloudflare/cloudflare-go"
+	"github.com/eryajf/cloud_dns_exporter/public"
 	"github.com/golang-module/carbon/v2"
 	"sync"
 	"time"
-
-	//"github.com/eryajf/cloud_dns_exporter/pkg/provider"
-	"github.com/eryajf/cloud_dns_exporter/public"
 )
 
 type CloudFlareDNS struct {
@@ -112,6 +110,7 @@ func (cf *CloudFlareDNS) ListRecords() ([]Record, error) {
 			records, err := cf.getRecordList(domain.DomainName)
 			if err != nil {
 				fmt.Printf("cloudflare get record list error: %v", err)
+				return
 			}
 			mu.Lock()
 			results[domain.DomainName] = records
