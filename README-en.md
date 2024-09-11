@@ -16,7 +16,7 @@ English | [简体中文](README.md)
 <img src="https://cdn.jsdelivr.net/gh/eryajf/tu@main/img/image_20240420_214408.gif" width="800"  height="3">
 </div><br>
 
-![cloud_dns_exporter](https://socialify.git.ci/eryajf/cloud_dns_exporter/image?description=1&descriptionEditable=%E9%80%90%E6%AD%A5%E8%BF%88%E5%90%91%E8%BF%90%E7%BB%B4%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%8E%B0%E4%BB%A3%E5%8C%96%EF%BC%9A%E8%A7%84%E8%8C%83%E5%8C%96%EF%BC%8C%E6%A0%87%E5%87%86%E5%8C%96%EF%BC%8C%E9%AB%98%E6%95%88%E5%8C%96%EF%BC%8C%E4%BC%98%E9%9B%85%E5%8C%96&font=Bitter&forks=1&issues=1&language=1&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
+![cloud_dns_exporter](https://socialify.git.ci/eryajf/cloud_dns_exporter/image?description=1&descriptionEditable=Gradually%20move%20towards%20the%20four%20modernizations%20of%20operation%20and%20maintenance:%20normalization,%20standardization,%20efficiency,%20and%20elegance&font=Bitter&forks=1&issues=1&language=1&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
 
 </div>
 
