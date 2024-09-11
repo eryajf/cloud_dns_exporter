@@ -20,12 +20,13 @@ func InitSvc() {
 
 const (
 	// Cloud Providers
-	TencentDnsProvider string = "tencent"
-	AliyunDnsProvider  string = "aliyun"
-	GodaddyDnsProvider string = "godaddy"
-	DNSLaDnsProvider   string = "dnsla"
-	HuaweiDnsProvider  string = "huawei"
-	AmazonDnsProvider  string = "amazon"
+	TencentDnsProvider    string = "tencent"
+	AliyunDnsProvider     string = "aliyun"
+	GodaddyDnsProvider    string = "godaddy"
+	DNSLaDnsProvider      string = "dnsla"
+	HuaweiDnsProvider     string = "huawei"
+	AmazonDnsProvider     string = "amazon"
+	CloudFlareDnsProvider string = "cloudflare"
 	// Metrics Name
 	DomainList     string = "domain_list"
 	RecordList     string = "record_list"
