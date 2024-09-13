@@ -69,11 +69,12 @@ func GetMultipleCertInfo(records []provider.GetRecordCertReq) ([]provider.Record
 func GetCertInfo(record provider.GetRecordCertReq) (certInfo provider.RecordCert, err error) {
 	config := &tls.Config{
 		InsecureSkipVerify: true,
+		ServerName:         record.FullRecord,
 	}
 	d := net.Dialer{
 		Timeout: time.Second * 3,
 	}
-	conn, err := tls.DialWithDialer(&d, "tcp", record.FullRecord+":443", config)
+	conn, err := tls.DialWithDialer(&d, "tcp", record.RecordValue+":443", config)
 	if err != nil {
 		return certInfo, err
 	}
@@ -135,7 +136,7 @@ func getNewRecord(records []provider.Record) (newRecords []provider.Record) {
 				rec.FullRecord = strings.ReplaceAll(rec.FullRecord, "*", "a")
 			}
 			if (rec.RecordType == "A" || rec.RecordType == "CNAME") &&
-				rec.RecordStatus == "enable" && isPortOpen(rec.FullRecord) {
+				rec.RecordStatus == "enable" && isPortOpen(rec.RecordValue) {
 				recordChan <- rec
 			}
 		}(record)
