@@ -109,6 +109,7 @@ type GetRecordCertReq struct {
 	CloudName     string `json:"cloud_name"`
 	DomainName    string `json:"domain_name"`
 	FullRecord    string `json:"full_record"`
+	RecordValue   string `json:"record_value"`
 	RecordID      string `json:"record_id"`
 }
 

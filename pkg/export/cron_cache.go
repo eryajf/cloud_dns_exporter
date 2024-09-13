@@ -105,6 +105,7 @@ func loadingCert() {
 						CloudName:     v.CloudName,
 						DomainName:    v.DomainName,
 						FullRecord:    v.FullRecord,
+						RecordValue:   v.RecordValue,
 						RecordID:      v.RecordID,
 					})
 				}
