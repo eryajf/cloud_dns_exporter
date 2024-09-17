@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/eryajf/cloud_dns_exporter/public/logger"
+	"github.com/weppos/publicsuffix-go/publicsuffix"
 
 	"github.com/eryajf/cloud_dns_exporter/pkg/provider"
 	"github.com/eryajf/cloud_dns_exporter/public"
@@ -21,8 +22,10 @@ func InitCron() {
 	loading()
 	_, _ = c.AddFunc("03 03 03 * * *", func() {
 		loadingCert()
+		loadingCustomRecordCert()
 	})
 	loadingCert()
+	loadingCustomRecordCert()
 
 	c.Start()
 }
@@ -129,4 +132,51 @@ func loadingCert() {
 		}
 	}
 	wg.Wait()
+}
+
+func loadingCustomRecordCert() {
+	if len(public.Config.CustomRecords) == 0 {
+		return
+	}
+	var records []provider.Record
+	for _, v := range public.Config.CustomRecords {
+		domainName, err := publicsuffix.Domain(v)
+		if err != nil {
+			logger.Error(fmt.Sprintf("[ custom ] get domain failed: %v", err))
+		}
+		records = append(records, provider.Record{
+			CloudProvider: public.CustomRecords,
+			CloudName:     public.CustomRecords,
+			DomainName:    domainName,
+			FullRecord:    v,
+			RecordValue:   v,
+			RecordID:      public.GetID(),
+			RecordType:    "CNAME", // 默认指定为CNAME记录,这两条记录为了通过检测
+			RecordStatus:  "enable",
+		})
+	}
+	var recordCertReq []provider.GetRecordCertReq
+	for _, v := range getNewRecord(records) {
+		recordCertReq = append(recordCertReq, provider.GetRecordCertReq{
+			CloudProvider: v.CloudProvider,
+			CloudName:     v.CloudName,
+			DomainName:    v.DomainName,
+			FullRecord:    v.FullRecord,
+			RecordValue:   v.RecordValue,
+			RecordID:      v.RecordID,
+		})
+	}
+	recordCerts, err := GetMultipleCertInfo(recordCertReq)
+	if err != nil {
+		logger.Error(fmt.Sprintf("[ custom ] get record cert info failed: %v", err))
+		return
+	}
+	recordCertInfoCacheKey := public.RecordCertInfo + "_" + public.CustomRecords
+	value, err := json.Marshal(recordCerts)
+	if err != nil {
+		logger.Error(fmt.Sprintf("[ %s ] marshal domain list failed: %v", recordCertInfoCacheKey, err))
+	}
+	if err := public.CertCache.Set(recordCertInfoCacheKey, value); err != nil {
+		logger.Error(fmt.Sprintf("[ %s ] cache domain list failed: %v", recordCertInfoCacheKey, err))
+	}
 }
