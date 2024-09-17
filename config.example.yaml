@@ -1,3 +1,6 @@
+custom_records:
+  - "www.baidu.com"
+  - "wiki.eryajf.net"
 cloud_providers:
   # ↓↓↓ -------------------------- 1. DNS提供商Tencent，请勿更改此行，如无需腾讯云的配置，可删除此段配置至 aliyun，该字段会作为标签注入到指标中
   tencent:

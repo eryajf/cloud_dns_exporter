@@ -97,6 +97,7 @@ func (c *Metrics) Describe(ch chan<- *prometheus.Desc) {
 func (c *Metrics) Collect(ch chan<- prometheus.Metric) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
+
 	for cloudProvider, accounts := range public.Config.CloudProviders {
 		for _, cloudAccount := range accounts.Accounts {
 			cloudName := cloudAccount["name"]
@@ -157,5 +158,20 @@ func (c *Metrics) Collect(ch chan<- prometheus.Metric) {
 				ch <- prometheus.MustNewConstMetric(c.metrics[public.RecordCertInfo], prometheus.GaugeValue, float64(v.DaysUntilExpiry), v.CloudProvider, v.CloudName, v.DomainName, v.RecordID, v.FullRecord, v.SubjectCommonName, v.SubjectOrganization, v.SubjectOrganizationalUnit, v.IssuerCommonName, v.IssuerOrganization, v.IssuerOrganizationalUnit, v.CreatedDate, v.ExpiryDate, fmt.Sprintf("%t", v.CertMatched), v.ErrorMsg)
 			}
 		}
+	}
+
+	// get custom record cert info list from cache
+	recordCertInfoCacheKey := public.RecordCertInfo + "_" + public.CustomRecords
+	var recordCerts []provider.RecordCert
+	recordCertInfoCacheValue, err := public.CertCache.Get(recordCertInfoCacheKey)
+	if err != nil {
+		logger.Error(fmt.Sprintf("[ %s ] get record list failed: %v", recordCertInfoCacheKey, err))
+	}
+	err = json.Unmarshal(recordCertInfoCacheValue, &recordCerts)
+	if err != nil {
+		logger.Error(fmt.Sprintf("[ %s ] json.Unmarshal error: %v", recordCertInfoCacheKey, err))
+	}
+	for _, v := range recordCerts {
+		ch <- prometheus.MustNewConstMetric(c.metrics[public.RecordCertInfo], prometheus.GaugeValue, float64(v.DaysUntilExpiry), v.CloudProvider, v.CloudName, v.DomainName, v.RecordID, v.FullRecord, v.SubjectCommonName, v.SubjectOrganization, v.SubjectOrganizationalUnit, v.IssuerCommonName, v.IssuerOrganization, v.IssuerOrganizationalUnit, v.CreatedDate, v.ExpiryDate, fmt.Sprintf("%t", v.CertMatched), v.ErrorMsg)
 	}
 }

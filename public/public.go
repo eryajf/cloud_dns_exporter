@@ -3,13 +3,12 @@ package public
 import (
 	"context"
 	"os"
-	"strings"
 	"sync"
 	"time"
 
 	"github.com/allegro/bigcache/v3"
 	"github.com/eryajf/cloud_dns_exporter/public/logger"
-	"github.com/google/uuid"
+	"github.com/rs/xid"
 
 	"gopkg.in/yaml.v2"
 )
@@ -21,12 +20,13 @@ func InitSvc() {
 }
 
 const (
+	// Custom
+	CustomRecords string = "custom_records"
 	// Cloud Providers
 	TencentDnsProvider    string = "tencent"
 	AliyunDnsProvider     string = "aliyun"
 	GodaddyDnsProvider    string = "godaddy"
 	DNSLaDnsProvider      string = "dnsla"
-	HuaweiDnsProvider     string = "huawei"
 	AmazonDnsProvider     string = "amazon"
 	CloudFlareDnsProvider string = "cloudflare"
 	// Metrics Name
@@ -40,7 +40,6 @@ var (
 	Config    *Configuration
 	Cache     *bigcache.BigCache
 	CertCache *bigcache.BigCache
-	ID        uuid.UUID = uuid.New()
 )
 
 type Account struct {
@@ -52,6 +51,7 @@ type Account struct {
 
 // Config 表示配置文件的结构
 type Configuration struct {
+	CustomRecords  []string `yaml:"custom_records"`
 	CloudProviders map[string]struct {
 		Accounts []map[string]string `yaml:"accounts"`
 	} `yaml:"cloud_providers"`
@@ -88,5 +88,5 @@ func InitCache() {
 
 // GetID 获取唯一ID
 func GetID() string {
-	return strings.ReplaceAll(ID.String(), "-", "")
+	return xid.New().String()
 }
