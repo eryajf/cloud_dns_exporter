@@ -66,6 +66,7 @@ func (a *AmazonDNS) ListDomains() ([]Domain, error) {
 		return nil, err
 	}
 	ticker := time.NewTicker(100 * time.Millisecond)
+	defer ticker.Stop()
 	for _, domain := range domains {
 		wg.Add(1)
 		go func(domain types.HostedZone) {

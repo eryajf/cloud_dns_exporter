@@ -101,6 +101,7 @@ func (g *GodaddyDNS) ListRecords() ([]Record, error) {
 	}
 	results := make(map[string][]daddy.DNSRecord)
 	ticker := time.NewTicker(time.Second)
+	defer ticker.Stop()
 	for _, domain := range domains {
 		wg.Add(1)
 		go func(domain string) {
